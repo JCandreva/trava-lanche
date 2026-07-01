@@ -1,0 +1,28 @@
+{
+  "name": "trava-lanche",
+  "version": "1.0.0",
+  "description": "\"# trava-lanche\"",
+  "homepage": "https://github.com/JCandreva/trava-lanche#readme",
+  "bugs": {
+    "url": "https://github.com/JCandreva/trava-lanche/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JCandreva/trava-lanche.git"
+  },
+  "license": "ISC",
+  "authors": [
+    "JCandreva",
+    "Lucasltx1"
+  ],
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.106.0"
+  }
+}

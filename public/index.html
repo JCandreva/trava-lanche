@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // Fetch products from the API and populate the table
+        fetch('/api/produtos')
+            .then(response => response.json())
+            .then(products => {
+                const tbody = document.getElementById('produtos-table-body');
+                products.forEach(product => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${product.id}</td>
+                        <td>${product.nome_produto}</td>
+                        <td>R$ ${product.preco.toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+    </script>
+</head>
+<body>
+    Produtos:
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome do Produto</th>
+                <th>Preço</th>
+            </tr>
+        </thead>
+        <tbody id="produtos-table-body">
+            <!-- Os produtos serão inseridos aqui -->
+        </tbody>
+    </table>
+</body>
+</html>

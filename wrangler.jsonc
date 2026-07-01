@@ -1,0 +1,23 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "trava-lanche",
+	"main": "src/index.js",
+	"compatibility_date": "2026-07-01",
+	"observability": {
+		"enabled": true
+	},
+	"assets": {
+		"directory": "public"
+	},
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "db",
+			"database_name": "trava-lanche",
+			"database_id": "25f2f408-13ac-4ff5-bc50-89cb99cc273e",
+			"remote": true
+		}
+	]
+}

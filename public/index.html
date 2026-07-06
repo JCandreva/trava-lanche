@@ -13,9 +13,12 @@
                 products.forEach(product => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${product.id}</td>
-                        <td>${product.nome_produto}</td>
-                        <td>R$ ${product.preco.toFixed(2)}</td>
+                        <td>${product.id_produto}</td>
+                        <td>${product.nome}</td>
+                        <td>${product.calorias}</td>
+                        <td>${product.proteinas}</td>
+                        <td>${product.carboidratos}</td>
+                        <td>${product.gorduras}</td>
                     `;
                     tbody.appendChild(row);
                 });
@@ -23,18 +26,57 @@
     </script>
 </head>
 <body>
+    <div>
     Produtos:
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Nome do Produto</th>
-                <th>Preço</th>
+                <th>Calorias</th>
+                <th>Proteínas</th>
+                <th>Carboidratos</th>
+                <th>Gorduras</th>
             </tr>
         </thead>
         <tbody id="produtos-table-body">
             <!-- Os produtos serão inseridos aqui -->
         </tbody>
     </table>
+    Adicionar produto:
+    <form id="add-product-form" action="/api/produtos" method="POST">
+        <input type="text" name="nome" placeholder="Nome do Produto" required />
+        <input type="number" name="calorias" placeholder="Calorias" required />
+        <input type="number" name="proteinas" placeholder="Proteínas" required />
+        <input type="number" name="gorduras" placeholder="Gorduras" required />
+        <input type="number" name="carboidratos" placeholder="Carboidratos" required />
+        <button type="submit">Adicionar Produto</button>
+    </form>
+</div>
+<div>
+    Pessoas:
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome da Pessoa</th>
+                <th>Idade</th>
+                <th>Altura</th>
+                <th>Peso</th>
+            </tr>
+        </thead>
+        <tbody id="pessoas-table-body">
+            <!-- As pessoas serão inseridas aqui -->
+        </tbody>
+    </table>
+    Adicionar pessoa:
+    <form id="add-person-form" action="/api/pessoas" method="POST">
+        <input type="text" name="nome" placeholder="Nome da Pessoa" required />
+        <input type="number" name="idade" placeholder="Idade" required />
+        <input type="number" name="altura" placeholder="Altura" required />
+        <input type="number" name="peso" placeholder="Peso" required />
+        <button type="submit">Adicionar Pessoa</button>
+    </form>
+</div>
 </body>
 </html>

@@ -11,14 +11,21 @@ export default {
           const proteinas = data.get("proteinas");
           const gorduras = data.get("gorduras");
           const carboidratos = data.get("carboidratos");
-          await env.db
+          try {
+             await env.db
             .prepare(
             "INSERT INTO produtos (nome, calorias, proteinas, gorduras, carboidratos) VALUES (?, ?, ?, ?, ?)"
           )
           .bind(nome, parseInt(calorias), parseInt(proteinas), parseInt(gorduras), parseInt(carboidratos))
           .run();
+        }
+        catch (error) {
+          return new Response("Erro ao adicionar produto: " + error.message, { status: 500 });
+        }
         return new Response("Produto adicionado com sucesso!");
       }
+          
+         
       else if (request.method === "GET") {
       const { results } = await env.db
         .prepare("SELECT * FROM produtos")
@@ -26,20 +33,20 @@ export default {
       return Response.json(results);
       }
       break;
-    case "/api/produtos/:id":
+    case "/api/produtos/:nome":
       if (request.method === "DELETE") {
-        const id = pathname.split("/").pop();
+        const nome = pathname.split("/").pop();
         await env.db
-          .prepare("DELETE FROM produtos WHERE id = ?")
-          .bind(id)
+          .prepare("DELETE FROM produtos WHERE nome = ?")
+          .bind(nome)
           .run();
         return new Response("Produto deletado com sucesso!");
       }
       else if (request.method === "GET") {
-        const id = pathname.split("/").pop();
+        const nome = pathname.split("/").pop();
         const { results } = await env.db
-          .prepare("SELECT * FROM produtos WHERE id = ?")
-          .bind(id)
+          .prepare("SELECT * FROM produtos WHERE nome = ?")
+          .bind(nome)
           .run();
         return Response.json(results);
       }
@@ -49,12 +56,17 @@ export default {
         const data = await request.formData();
         const nome = data.get("nome");
         const peso = data.get("peso");
-        await env.db
-          .prepare(
-            "INSERT INTO pessoas (nome, peso) VALUES (?, ?)"
-          )
-          .bind(nome, parseFloat(peso))
-          .run();
+        try{
+          await env.db
+                    .prepare(
+                      "INSERT INTO pessoas (nome, peso) VALUES (?, ?)"
+                    )
+                    .bind(nome, parseFloat(peso))
+                    .run();
+                }
+        catch (error) {
+          return new Response("Erro ao adicionar pessoa: " + error.message, { status: 500 }); 
+        }
         return new Response("Pessoa adicionada com sucesso!");
       }
       else if (request.method === "GET") {
@@ -64,20 +76,20 @@ export default {
         return Response.json(results);
       }
       break;
-    case "/api/pessoas/:id":
+    case "/api/pessoas/:nome":
       if (request.method === "DELETE") {
-        const id = pathname.split("/").pop();
+        const nome = pathname.split("/").pop();
         await env.db
-          .prepare("DELETE FROM pessoas WHERE id = ?")
-          .bind(id)
+          .prepare("DELETE FROM pessoas WHERE nome = ?")
+          .bind(nome)
           .run();
         return new Response("Pessoa deletada com sucesso!");
       }
       else if (request.method === "GET") {
-        const id = pathname.split("/").pop();
+        const nome = pathname.split("/").pop();
         const { results } = await env.db
-          .prepare("SELECT * FROM pessoas WHERE id = ?")
-          .bind(id)
+          .prepare("SELECT * FROM pessoas WHERE nome = ?")
+          .bind(nome)
           .run();
         return Response.json(results);
       }

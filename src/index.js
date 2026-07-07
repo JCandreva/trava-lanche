@@ -6,12 +6,16 @@ export default {
       case "/api/produtos":
         if (request.method === "POST") {
           const data = await request.formData();
-          const { nome, calorias, proteinas, gorduras, carobidratos } = data;
+          const nome = data.get("nome");
+          const calorias = data.get("calorias");
+          const proteinas = data.get("proteinas");
+          const gorduras = data.get("gorduras");
+          const carboidratos = data.get("carboidratos");
           await env.db
             .prepare(
-            "INSERT INTO produtos (nome, calorias, proteinas, gorduras, carobidratos) VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO produtos (nome, calorias, proteinas, gorduras, carboidratos) VALUES (?, ?, ?, ?, ?)"
           )
-          .bind(nome, parseInt(calorias), parseInt(proteinas), parseInt(gorduras), parseInt(carobidratos))
+          .bind(nome, parseInt(calorias), parseInt(proteinas), parseInt(gorduras), parseInt(carboidratos))
           .run();
         return new Response("Produto adicionado com sucesso!");
       }
@@ -43,12 +47,13 @@ export default {
     case "/api/pessoas":
       if (request.method === "POST") {
         const data = await request.formData();
-        const { nome, idade, peso, altura } = data;
+        const nome = data.get("nome");
+        const peso = data.get("peso");
         await env.db
           .prepare(
-            "INSERT INTO pessoas (nome, idade, peso, altura) VALUES (?, ?, ?, ?)"
+            "INSERT INTO pessoas (nome, peso) VALUES (?, ?)"
           )
-          .bind(nome, parseInt(idade), parseFloat(peso), parseFloat(altura))
+          .bind(nome, parseFloat(peso))
           .run();
         return new Response("Pessoa adicionada com sucesso!");
       }

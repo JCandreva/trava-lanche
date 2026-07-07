@@ -5,24 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script>
-        // Fetch products from the API and populate the table
-        fetch('/api/produtos')
-            .then(response => response.json())
-            .then(products => {
-                const tbody = document.getElementById('produtos-table-body');
-                products.forEach(product => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${product.id_produto}</td>
-                        <td>${product.nome}</td>
-                        <td>${product.calorias}</td>
-                        <td>${product.proteinas}</td>
-                        <td>${product.carboidratos}</td>
-                        <td>${product.gorduras}</td>
-                    `;
-                    tbody.appendChild(row);
+        document.addEventListener('DOMContentLoaded', () => {
+            const produtosTableBody = document.getElementById('produtos-table-body');
+            const pessoasTableBody = document.getElementById('pessoas-table-body');
+            const addProductForm = document.getElementById('add-product-form');
+            const addPersonForm = document.getElementById('add-person-form');
+
+            // Fetch products from the API and populate the table
+            fetch('/api/produtos')
+                .then(response => response.json())
+                .then(products => {
+                    products.forEach(product => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${product.id_produto}</td>
+                            <td>${product.nome}</td>
+                            <td>${product.calorias}</td>
+                            <td>${product.proteinas}</td>
+                            <td>${product.carboidratos}</td>
+                            <td>${product.gorduras}</td>
+                        `;
+                        produtosTableBody.appendChild(row);
+                    });
+                });
+
+            fetch('/api/pessoas')
+                .then(response => response.json())
+                .then(people => {
+                    people.forEach(person => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${person.id_pessoa}</td>
+                            <td>${person.nome}</td>
+                            <td>${person.peso}</td>
+                        `;
+                        pessoasTableBody.appendChild(row);
+                    });
+                });
+
+            addProductForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+
+                fetch('/api/produtos', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                    location.reload();
                 });
             });
+
+            addPersonForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+
+                fetch('/api/pessoas', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                    location.reload();
+                });
+            });
+        });
     </script>
 </head>
 <body>
@@ -60,8 +110,6 @@
             <tr>
                 <th>ID</th>
                 <th>Nome da Pessoa</th>
-                <th>Idade</th>
-                <th>Altura</th>
                 <th>Peso</th>
             </tr>
         </thead>

@@ -36,11 +36,11 @@ VALUES('Arroz', 128, 2, 0, 1),
 ('Alcatra(1 bife médio)', 241, 31.9, 11.6, 0),
 ('Feijão', 70, 4.5, 14, 0.5);
 INSERT INTO alimentacao ("nome_produto", "nome_pessoa", "data_hora", "quantidade")
-VALUES(‘Arroz’ , ‘João’ , '2026-07-08T14:49', 1),
-VALUES(‘Arroz’ , ‘Ana’ , '2026-07-08T14:49', 1),
-VALUES(‘Arroz’ , ‘Fábio’ , '2026-07-08T14:49', 1),
-VALUES(‘Arroz’ , ‘Caio’ , '2026-07-08T14:49', 1),
-VALUES(‘Arroz’ , ‘Fael’ , '2026-07-08T14:49', 1);
+VALUES('Arroz', 'João', '2026-07-08T14:49', 1),
+('Arroz', 'Ana', '2026-07-08T14:49', 1),
+('Arroz', 'Fábio', '2026-07-08T14:49', 1),
+('Arroz', 'Caio', '2026-07-08T14:49', 1),
+('Arroz', 'Fael', '2026-07-08T14:49', 1);
 ```
 
 script 3:

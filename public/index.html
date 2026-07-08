@@ -161,10 +161,10 @@
             <h3>Adicionar produto</h3>
             <form id="add-product-form" action="/api/produtos" method="POST">
                 <input type="text" name="nome" placeholder="Nome do Produto" required />
-                <input type="number" name="calorias" placeholder="Calorias" required />
-                <input type="number" name="proteinas" placeholder="Proteínas" required />
-                <input type="number" name="gorduras" placeholder="Gorduras" required />
-                <input type="number" name="carboidratos" placeholder="Carboidratos" required />
+                <input type="number" step="any" name="calorias" placeholder="Calorias" required />
+                <input type="number" step="any" name="proteinas" placeholder="Proteínas" required />
+                <input type="number" step="any" name="gorduras" placeholder="Gorduras" required />
+                <input type="number" step="any" name="carboidratos" placeholder="Carboidratos" required />
                 <button type="submit">Adicionar Produto</button>
             </form>
             <h3>Excluir produto</h3>
@@ -192,7 +192,7 @@
             <h3>Adicionar pessoa</h3>
             <form id="add-person-form" action="/api/pessoas" method="POST">
                 <input type="text" name="nome" placeholder="Nome da Pessoa" required />
-                <input type="number" name="peso" placeholder="Peso(kg)" required />
+                <input type="number" step="any" name="peso" placeholder="Peso(kg)" required />
                 <input type="number" name="idade" placeholder="Idade" required />
                 <input type="number" name="altura" placeholder="Altura(cm)" required />
                 <button type="submit">Adicionar Pessoa</button>

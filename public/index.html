@@ -11,6 +11,8 @@
             const pessoasTableBody = document.getElementById('pessoas-table-body');
             const addProductForm = document.getElementById('add-product-form');
             const addPersonForm = document.getElementById('add-person-form');
+            const deleteProductForm = document.getElementById('delete-product-form');
+            const deletePersonForm = document.getElementById('delete-person-form');
             const searchProductInput = document.getElementById('search-produto-input');
             const searchProductButton = document.getElementById('search-produto-button');
             const searchProductResult = document.getElementById('search-produto-result');
@@ -76,6 +78,37 @@
                     location.reload();
                 });
             });
+
+            deleteProductForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const nome = formData.get('nome').trim();
+
+                fetch(`/api/produtos/${encodeURIComponent(nome)}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                    location.reload();
+                });
+            });
+
+            deletePersonForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const nome = formData.get('nome').trim();
+
+                fetch(`/api/pessoas/${encodeURIComponent(nome)}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                    location.reload();
+                });
+            });
+
             searchProductButton.addEventListener('click', function() {
                 const productName = searchProductInput.value.trim();
                 if (productName) {
@@ -108,61 +141,75 @@
         <a href="/alimentacao">Alimentação</a> |
         <a href="/calculos">Cálculos</a>
     </nav>
-    <div>
-    Produtos:
-    <table>
-        <thead>
-            <tr>
-                <th>Nome do Produto</th>
-                <th>Calorias</th>
-                <th>Proteínas</th>
-                <th>Carboidratos</th>
-                <th>Gorduras</th>
-            </tr>
-        </thead>
-        <tbody id="produtos-table-body">
-            <!-- Os produtos serão inseridos aqui -->
-        </tbody>
-    </table>
-    Adicionar produto:
-    <form id="add-product-form" action="/api/produtos" method="POST">
-        <input type="text" name="nome" placeholder="Nome do Produto" required />
-        <input type="number" name="calorias" placeholder="Calorias" required />
-        <input type="number" name="proteinas" placeholder="Proteínas" required />
-        <input type="number" name="gorduras" placeholder="Gorduras" required />
-        <input type="number" name="carboidratos" placeholder="Carboidratos" required />
-        <button type="submit">Adicionar Produto</button>
-    </form>
-</div>
-<div>
-    Pessoas:
-    <table>
-        <thead>
-            <tr>
-                <th>Nome da Pessoa</th>
-                <th>Peso</th>
-                <th>Idade</th>
-                <th>Altura</th>
-            </tr>
-        </thead>
-        <tbody id="pessoas-table-body">
-            <!-- As pessoas serão inseridas aqui -->
-        </tbody>
-    </table>
-    Adicionar pessoa:
-    <form id="add-person-form" action="/api/pessoas" method="POST">
-        <input type="text" name="nome" placeholder="Nome da Pessoa" required />
-        <input type="number" name="peso" placeholder="Peso(kg)" required />
-        <input type="number" name="idade" placeholder="Idade" required />
-        <input type="number" name="altura" placeholder="Altura(cm)" required />
-        <button type="submit">Adicionar Pessoa</button>
-    </form>
-</div>
-<div id="search-produto">
-    <h3>Buscar Produto</h3>
-    <input type="text" id="search-produto-input" placeholder="Nome do Produto" />
-    <button id="search-produto-button">Buscar</button>
-    <div id="search-produto-result"></div>
-</div>
+    <main>
+        <div>
+            <h3>Produtos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Produto</th>
+                        <th>Calorias</th>
+                        <th>Proteínas</th>
+                        <th>Carboidratos</th>
+                        <th>Gorduras</th>
+                    </tr>
+                </thead>
+                <tbody id="produtos-table-body">
+                    <!-- Os produtos serão inseridos aqui -->
+                </tbody>
+            </table>
+            <h3>Adicionar produto</h3>
+            <form id="add-product-form" action="/api/produtos" method="POST">
+                <input type="text" name="nome" placeholder="Nome do Produto" required />
+                <input type="number" name="calorias" placeholder="Calorias" required />
+                <input type="number" name="proteinas" placeholder="Proteínas" required />
+                <input type="number" name="gorduras" placeholder="Gorduras" required />
+                <input type="number" name="carboidratos" placeholder="Carboidratos" required />
+                <button type="submit">Adicionar Produto</button>
+            </form>
+            <h3>Excluir produto</h3>
+            <form id="delete-product-form">
+                <input type="text" name="nome" placeholder="Nome do Produto" required />
+                <button type="submit">Excluir Produto</button>
+            </form>
+        </div>
+
+        <div>
+            <h3>Pessoas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome da Pessoa</th>
+                        <th>Peso</th>
+                        <th>Idade</th>
+                        <th>Altura</th>
+                    </tr>
+                </thead>
+                <tbody id="pessoas-table-body">
+                    <!-- As pessoas serão inseridas aqui -->
+                </tbody>
+            </table>
+            <h3>Adicionar pessoa</h3>
+            <form id="add-person-form" action="/api/pessoas" method="POST">
+                <input type="text" name="nome" placeholder="Nome da Pessoa" required />
+                <input type="number" name="peso" placeholder="Peso(kg)" required />
+                <input type="number" name="idade" placeholder="Idade" required />
+                <input type="number" name="altura" placeholder="Altura(cm)" required />
+                <button type="submit">Adicionar Pessoa</button>
+            </form>
+            <h3>Excluir pessoa</h3>
+            <form id="delete-person-form">
+                <input type="text" name="nome" placeholder="Nome da Pessoa" required />
+                <button type="submit">Excluir Pessoa</button>
+            </form>
+        </div>
+
+        <div id="search-produto">
+            <h3>Buscar Produto</h3>
+            <input type="text" id="search-produto-input" placeholder="Nome do Produto" />
+            <button id="search-produto-button">Buscar</button>
+            <div id="search-produto-result"></div>
+        </div>
+    </main>
 </body>
 </html>

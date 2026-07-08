@@ -11,6 +11,8 @@
             const consultaMacrosResult = document.getElementById('consulta-macros-result');
             const consultaSuperavitForm = document.getElementById('consulta-superavit-form');
             const consultaSuperavitResult = document.getElementById('consulta-superavit-result');
+            const nuncaComeuForm = document.getElementById('nunca-comeu-form');
+            const nuncaComeuResult = document.getElementById('nunca-comeu-result');
             
 
             // Fetch pessoas to populate the select options
@@ -19,12 +21,14 @@
                 .then(pessoas => {
                     const pessoaSelectMacros = consultaMacrosForm.querySelector('select[name="nome_pessoa"]');
                     const pessoaSelectSuperavit = consultaSuperavitForm.querySelector('select[name="nome_pessoa"]');
+                    const pessoaSelectNuncaComeu = nuncaComeuForm.querySelector('select[name="nome_pessoa"]');
                     pessoas.forEach(pessoa => {
                         const option = document.createElement('option');
                         option.value = pessoa.nome;
                         option.textContent = pessoa.nome;
                         pessoaSelectMacros.appendChild(option.cloneNode(true));
                         pessoaSelectSuperavit.appendChild(option);
+                        pessoaSelectNuncaComeu.appendChild(option.cloneNode(true));
                     });
                 });
 
@@ -78,6 +82,33 @@
                         }
                     });
             });
+
+            nuncaComeuForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const nome_pessoa = formData.get('nome_pessoa');
+
+                fetch(`/api/produtos_nunca_comeu?nome_pessoa=${encodeURIComponent(nome_pessoa)}`)
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.error) {
+                            nuncaComeuResult.innerHTML = `<p style="color: red;">${result.error}</p>`;
+                            return;
+                        }
+
+                        if (result.length === 0) {
+                            nuncaComeuResult.innerHTML = `<p>${nome_pessoa} já consumiu todos os produtos cadastrados.</p>`;
+                            return;
+                        }
+
+                        nuncaComeuResult.innerHTML = `
+                            <h3>Produtos que ${nome_pessoa} nunca comeu</h3>
+                            <ul>
+                                ${result.map(produto => `<li>${produto.nome}</li>`).join('')}
+                            </ul>
+                        `;
+                    });
+            });
         });
     </script>
 </head>
@@ -121,6 +152,18 @@
                     <button type="submit">Consultar</button>
                 </form>
                 <div id="consulta-superavit-result" class="calc-result"></div>
+            </article>
+
+            <article class="calc-card calc-card-wide">
+                <h2>Produtos que a pessoa nunca comeu</h2>
+                <form id="nunca-comeu-form" class="compact-form">
+                    <select name="nome_pessoa" required>
+                        <option value="">Selecione uma pessoa</option>
+                        <!-- Opções de pessoas serão carregadas aqui -->
+                    </select>
+                    <button type="submit">Consultar</button>
+                </form>
+                <div id="nunca-comeu-result" class="calc-result"></div>
             </article>
         </section>
     </main>

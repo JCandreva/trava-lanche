@@ -309,6 +309,10 @@ li + li {
   gap: 18px;
 }
 
+.page-calc .calc-card-wide {
+  grid-column: 1 / -1;
+}
+
 .page-calc .calc-card {
   padding: 22px;
   border: 1px solid var(--border);
@@ -325,6 +329,11 @@ li + li {
   margin: 0 0 14px;
   color: var(--primary-dark);
   font-size: 1.1rem;
+}
+
+.page-calc .compact-form {
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: center;
 }
 
 .page-calc .calc-result {
@@ -365,8 +374,16 @@ li + li {
     grid-template-columns: 1fr;
   }
 
+  .page-calc .calc-card-wide {
+    grid-column: auto;
+  }
+
   .page-calc .calc-card {
     padding: 16px;
+  }
+
+  .page-calc .compact-form {
+    grid-template-columns: 1fr;
   }
 
   table {

@@ -18,16 +18,8 @@ export default {
 
         try {
           await env.db
-            .prepare(
-              "INSERT INTO produtos (nome, calorias, proteinas, gorduras, carboidratos) VALUES (?, ?, ?, ?, ?)"
-            )
-            .bind(
-              nome,
-              parseInt(calorias),
-              parseInt(proteinas),
-              parseInt(gorduras),
-              parseInt(carboidratos)
-            )
+            .prepare("INSERT INTO produtos (nome, calorias, proteinas, gorduras, carboidratos) VALUES (?, ?, ?, ?, ?)")
+            .bind(nome, parseInt(calorias), parseInt(proteinas), parseInt(gorduras), parseInt(carboidratos))
             .run();
         } catch (error) {
           return new Response("Erro ao adicionar produto: " + error.message, { status: 500 });
@@ -141,7 +133,7 @@ export default {
         const dia = data.get("data");
         const { results } = await env.db
           .prepare(`
-            SELECT 
+            SELECT
               p.nome AS nome_pessoa,
               SUM(pr.calorias * a.quantidade) AS total_calorias,
               SUM(pr.proteinas * a.quantidade) AS total_proteinas,
@@ -167,7 +159,7 @@ export default {
         const dia = data.get("data");
         const { results } = await env.db
           .prepare(`
-            SELECT 
+            SELECT
               p.nome AS nome_pessoa,
               SUM(pr.calorias * a.quantidade) - 10 * p.peso + 6.25 * p.altura - 5 * p.idade + 5 AS superavit_calorias
             FROM alimentacao a
@@ -181,9 +173,35 @@ export default {
 
         return Response.json(results);
       }
-    return new Response(
-      "Call /api/produtos to see all products",
-    );
-  }
-}
+    }
+
+    if (pathname.startsWith("/api/produtos_nunca_comeu")) {
+      if (request.method === "GET") {
+        const data = new URL(request.url).searchParams;
+        const nome_pessoa = data.get("nome_pessoa");
+
+        if (!nome_pessoa) {
+          return Response.json({ error: "Informe uma pessoa." }, { status: 400 });
+        }
+
+        const { results } = await env.db
+          .prepare(`
+            SELECT pr.*
+            FROM produtos pr
+            WHERE pr.nome NOT IN (
+              SELECT a.nome_produto
+              FROM alimentacao a
+              WHERE a.nome_pessoa = ?
+            )
+            ORDER BY pr.nome
+          `)
+          .bind(nome_pessoa)
+          .run();
+
+        return Response.json(results);
+      }
+    }
+
+    return new Response("Call /api/produtos to see all products");
+  },
 };

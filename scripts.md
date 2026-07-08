@@ -25,7 +25,7 @@ script 2:
 ```sql
 INSERT INTO pessoas ("nome", "peso", "idade", "altura") 
 VALUES('João', 75, 75, 175),
-('Ana', 52, 1, 1),
+('Ana', 52, 20, 160),
 ('Fábio', 100, 21, 170),
 ('Caio', 80, 16, 190),
 ('Fael', 48, 12, 150);

@@ -19,7 +19,7 @@ export default {
         try {
           await env.db
             .prepare("INSERT INTO produtos (nome, calorias, proteinas, gorduras, carboidratos) VALUES (?, ?, ?, ?, ?)")
-            .bind(nome, parseInt(calorias), parseInt(proteinas), parseInt(gorduras), parseInt(carboidratos))
+            .bind(nome, parseFloat(calorias), parseFloat(proteinas), parseFloat(gorduras), parseFloat(carboidratos))
             .run();
         } catch (error) {
           return new Response("Erro ao adicionar produto: " + error.message, { status: 500 });

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cálculos da pessoa</title>
+    <link rel="stylesheet" href="/styles.css">
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const consultaMacrosForm = document.getElementById('consulta-macros-form');
@@ -80,29 +81,48 @@
         });
     </script>
 </head>
-<body>
+<body class="page-calc">
     <nav>
         <a href="/">Home</a> |
         <a href="/alimentacao/">Alimentações</a>
-    Consulta macros do dia:
-    <form id="consulta-macros-form">
-        <select name="nome_pessoa" required>
-            <option value="">Selecione uma pessoa</option>
-            <!-- Opções de pessoas serão carregadas aqui -->
-        </select>
-        <input type="date" name="data" required />
-        <button type="submit">Consultar</button>
-    </form>
-    <div id="consulta-macros-result"></div>
-    Consulta superavit:
-    <form id="consulta-superavit-form">
-        <select name="nome_pessoa" required>
-            <option value="">Selecione uma pessoa</option>
-            <!-- Opções de pessoas serão carregadas aqui -->
-        </select>
-        <input type="date" name="data" required />
-        <button type="submit">Consultar</button>
-    </form>
-    <div id="consulta-superavit-result"></div>
+    </nav>
+
+    <main class="calc-shell">
+        <section class="calc-hero">
+            <p class="eyebrow">Cálculos</p>
+            <h1>Macros e superávit por pessoa</h1>
+            <p>
+                Consulte o consumo diário e veja o superávit calórico estimado com uma interface mais limpa e focada.
+            </p>
+        </section>
+
+        <section class="calc-grid">
+            <article class="calc-card">
+                <h2>Consulta macros do dia</h2>
+                <form id="consulta-macros-form">
+                    <select name="nome_pessoa" required>
+                        <option value="">Selecione uma pessoa</option>
+                        <!-- Opções de pessoas serão carregadas aqui -->
+                    </select>
+                    <input type="date" name="data" required />
+                    <button type="submit">Consultar</button>
+                </form>
+                <div id="consulta-macros-result" class="calc-result"></div>
+            </article>
+
+            <article class="calc-card calc-card-accent">
+                <h2>Consulta superávit</h2>
+                <form id="consulta-superavit-form">
+                    <select name="nome_pessoa" required>
+                        <option value="">Selecione uma pessoa</option>
+                        <!-- Opções de pessoas serão carregadas aqui -->
+                    </select>
+                    <input type="date" name="data" required />
+                    <button type="submit">Consultar</button>
+                </form>
+                <div id="consulta-superavit-result" class="calc-result"></div>
+            </article>
+        </section>
+    </main>
 </body>
 </html>

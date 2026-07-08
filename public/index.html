@@ -10,6 +10,9 @@
             const pessoasTableBody = document.getElementById('pessoas-table-body');
             const addProductForm = document.getElementById('add-product-form');
             const addPersonForm = document.getElementById('add-person-form');
+            const searchProductInput = document.getElementById('search-produto-input');
+            const searchProductButton = document.getElementById('search-produto-button');
+            const searchProductResult = document.getElementById('search-produto-result');
 
             // Fetch products from the API and populate the table
             fetch('/api/produtos')
@@ -70,6 +73,30 @@
                     location.reload();
                 });
             });
+            searchProductButton.addEventListener('click', function() {
+                const productName = searchProductInput.value.trim();
+                if (productName) {
+                    fetch(`/api/produtos/${encodeURIComponent(productName)}`)
+                        .then(response => response.json())
+                        .then(product => {
+                            if (product.length > 0) {
+                                product.forEach(p => {
+                                    const row = document.createElement('tr');
+                                    row.innerHTML = `
+                                        <p>Nome: ${p.nome}</p>
+                                        <p>Calorias: ${p.calorias}</p>
+                                        <p>Proteínas: ${p.proteinas}</p>
+                                        <p>Carboidratos: ${p.carboidratos}</p>
+                                        <p>Gorduras: ${p.gorduras}</p>
+                                    `;
+                                    searchProductResult.appendChild(row);
+                                });
+                            } else {
+                                searchProductResult.textContent = 'Produto não encontrado.';
+                            }
+                        });
+                }
+            });
         });
     </script>
 </head>
@@ -119,6 +146,12 @@
         <input type="number" name="peso" placeholder="Peso" required />
         <button type="submit">Adicionar Pessoa</button>
     </form>
+</div>
+<div id="search-produto">
+    <h3>Buscar Produto</h3>
+    <input type="text" id="search-produto-input" placeholder="Nome do Produto" />
+    <button id="search-produto-button">Buscar</button>
+    <div id="search-produto-result"></div>
 </div>
 </body>
 </html>

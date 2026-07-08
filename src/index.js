@@ -67,11 +67,13 @@ export default {
         const data = await request.formData();
         const nome = data.get("nome");
         const peso = data.get("peso");
+        const idade = data.get("idade");
+        const altura = data.get("altura");
 
         try {
           await env.db
-            .prepare("INSERT INTO pessoas (nome, peso) VALUES (?, ?)")
-            .bind(nome, parseFloat(peso))
+            .prepare("INSERT INTO pessoas (nome, peso, idade, altura) VALUES (?, ?, ?, ?)")
+            .bind(nome, parseFloat(peso), parseInt(idade), parseInt(altura))
             .run();
         } catch (error) {
           return new Response("Erro ao adicionar pessoa: " + error.message, { status: 500 });
@@ -158,8 +160,30 @@ export default {
       }
     }
 
+    if (pathname.startsWith("/api/consulta_superavit")) {
+      if (request.method === "GET") {
+        const data = new URL(request.url).searchParams;
+        const nome_pessoa = data.get("nome_pessoa");
+        const dia = data.get("data");
+        const { results } = await env.db
+          .prepare(`
+            SELECT 
+              p.nome AS nome_pessoa,
+              SUM(pr.calorias * a.quantidade) - 10 * p.peso + 6.25 * p.altura - 5 * p.idade + 5 AS superavit_calorias
+            FROM alimentacao a
+            JOIN produtos pr ON a.nome_produto = pr.nome
+            JOIN pessoas p ON a.nome_pessoa = p.nome
+            WHERE p.nome = ? AND a.data_hora LIKE ?
+            GROUP BY p.nome
+          `)
+          .bind(nome_pessoa, `${dia}%`)
+          .run();
+
+        return Response.json(results);
+      }
     return new Response(
       "Call /api/produtos to see all products",
     );
-  },
+  }
+}
 };

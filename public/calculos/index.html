@@ -8,17 +8,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             const consultaMacrosForm = document.getElementById('consulta-macros-form');
             const consultaMacrosResult = document.getElementById('consulta-macros-result');
+            const consultaSuperavitForm = document.getElementById('consulta-superavit-form');
+            const consultaSuperavitResult = document.getElementById('consulta-superavit-result');
+            
 
             // Fetch pessoas to populate the select options
             fetch('/api/pessoas')
                 .then(response => response.json())
                 .then(pessoas => {
-                    const pessoaSelect = consultaMacrosForm.querySelector('select[name="nome_pessoa"]');
+                    const pessoaSelectMacros = consultaMacrosForm.querySelector('select[name="nome_pessoa"]');
+                    const pessoaSelectSuperavit = consultaSuperavitForm.querySelector('select[name="nome_pessoa"]');
                     pessoas.forEach(pessoa => {
                         const option = document.createElement('option');
                         option.value = pessoa.nome;
                         option.textContent = pessoa.nome;
-                        pessoaSelect.appendChild(option);
+                        pessoaSelectMacros.appendChild(option.cloneNode(true));
+                        pessoaSelectSuperavit.appendChild(option);
                     });
                 });
 
@@ -50,6 +55,28 @@
                         }
                     });
             });
+
+            consultaSuperavitForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const nome_pessoa = formData.get('nome_pessoa');
+                const data = formData.get('data');
+
+                fetch(`/api/consulta_superavit?nome_pessoa=${encodeURIComponent(nome_pessoa)}&data=${encodeURIComponent(data)}`)
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.error) {
+                            consultaSuperavitResult.innerHTML = `<p style="color: red;">${result.error}</p>`;
+                        } else {
+                            if (result.length === 0) {
+                                consultaSuperavitResult.innerHTML = `<p>Nenhum registro encontrado para ${nome_pessoa} em ${data}.</p>`;
+                                return;
+                            }
+                            consultaSuperavitResult.innerHTML = `
+                                <h3>${nome_pessoa} estava com um ${result[0].superavit_calorias > 0 ? 'superavit' : 'deficit'} de ${Math.abs(result[0].superavit_calorias)}kcal em ${data}:</h3>`;
+                        }
+                    });
+            });
         });
     </script>
 </head>
@@ -64,5 +91,15 @@
         <button type="submit">Consultar</button>
     </form>
     <div id="consulta-macros-result"></div>
+    Consulta superavit:
+    <form id="consulta-superavit-form">
+        <select name="nome_pessoa" required>
+            <option value="">Selecione uma pessoa</option>
+            <!-- Opções de pessoas serão carregadas aqui -->
+        </select>
+        <input type="date" name="data" required />
+        <button type="submit">Consultar</button>
+    </form>
+    <div id="consulta-superavit-result"></div>
 </body>
 </html>

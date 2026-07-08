@@ -39,6 +39,8 @@
                         row.innerHTML = `
                             <td>${person.nome}</td>
                             <td>${person.peso}</td>
+                            <td>${person.idade}</td>
+                            <td>${person.altura}</td>
                         `;
                         pessoasTableBody.appendChild(row);
                     });
@@ -134,6 +136,8 @@
             <tr>
                 <th>Nome da Pessoa</th>
                 <th>Peso</th>
+                <th>Idade</th>
+                <th>Altura</th>
             </tr>
         </thead>
         <tbody id="pessoas-table-body">
@@ -143,7 +147,9 @@
     Adicionar pessoa:
     <form id="add-person-form" action="/api/pessoas" method="POST">
         <input type="text" name="nome" placeholder="Nome da Pessoa" required />
-        <input type="number" name="peso" placeholder="Peso" required />
+        <input type="number" name="peso" placeholder="Peso(kg)" required />
+        <input type="number" name="idade" placeholder="Idade" required />
+        <input type="number" name="altura" placeholder="Altura(cm)" required />
         <button type="submit">Adicionar Pessoa</button>
     </form>
 </div>

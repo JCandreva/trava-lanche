@@ -161,7 +161,7 @@ export default {
           .prepare(`
             SELECT
               p.nome AS nome_pessoa,
-              SUM(pr.calorias * a.quantidade) - 10 * p.peso + 6.25 * p.altura - 5 * p.idade + 5 AS superavit_calorias
+              SUM(pr.calorias * a.quantidade) - (10 * p.peso + 6.25 * p.altura - 5 * p.idade + 5) AS superavit_calorias
             FROM alimentacao a
             JOIN produtos pr ON a.nome_produto = pr.nome
             JOIN pessoas p ON a.nome_pessoa = p.nome

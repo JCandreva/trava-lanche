@@ -132,6 +132,32 @@ export default {
       }
     }
 
+    if (pathname.startsWith("/api/consulta_macros")) {
+      if (request.method === "GET") {
+        const data = new URL(request.url).searchParams;
+        const nome_pessoa = data.get("nome_pessoa");
+        const dia = data.get("data");
+        const { results } = await env.db
+          .prepare(`
+            SELECT 
+              p.nome AS nome_pessoa,
+              SUM(pr.calorias * a.quantidade) AS total_calorias,
+              SUM(pr.proteinas * a.quantidade) AS total_proteinas,
+              SUM(pr.gorduras * a.quantidade) AS total_gorduras,
+              SUM(pr.carboidratos * a.quantidade) AS total_carboidratos
+            FROM alimentacao a
+            JOIN produtos pr ON a.nome_produto = pr.nome
+            JOIN pessoas p ON a.nome_pessoa = p.nome
+            WHERE p.nome = ? AND a.data_hora LIKE ?
+            GROUP BY p.nome
+          `)
+          .bind(nome_pessoa, `${dia}%`)
+          .run();
+
+        return Response.json(results);
+      }
+    }
+
     return new Response(
       "Call /api/produtos to see all products",
     );

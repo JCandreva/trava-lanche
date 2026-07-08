@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculos da pessoa</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const consultaMacrosForm = document.getElementById('consulta-macros-form');
+            const consultaMacrosResult = document.getElementById('consulta-macros-result');
+
+            // Fetch pessoas to populate the select options
+            fetch('/api/pessoas')
+                .then(response => response.json())
+                .then(pessoas => {
+                    const pessoaSelect = consultaMacrosForm.querySelector('select[name="nome_pessoa"]');
+                    pessoas.forEach(pessoa => {
+                        const option = document.createElement('option');
+                        option.value = pessoa.nome;
+                        option.textContent = pessoa.nome;
+                        pessoaSelect.appendChild(option);
+                    });
+                });
+
+            consultaMacrosForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const nome_pessoa = formData.get('nome_pessoa');
+                const data = formData.get('data');
+
+                fetch(`/api/consulta_macros?nome_pessoa=${encodeURIComponent(nome_pessoa)}&data=${encodeURIComponent(data)}`)
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.error) {
+                            consultaMacrosResult.innerHTML = `<p style="color: red;">${result.error}</p>`;
+                        } else {
+                            if (result.length === 0) {
+                                consultaMacrosResult.innerHTML = `<p>Nenhum registro encontrado para ${nome_pessoa} em ${data}.</p>`;
+                                return;
+                            }
+                            consultaMacrosResult.innerHTML = `
+                                <h3>Resultados para ${nome_pessoa} em ${data}:</h3>
+                                <ul>
+                                    <li>Calorias: ${result[0].total_calorias}</li>
+                                    <li>Proteínas: ${result[0].total_proteinas}</li>
+                                    <li>Carboidratos: ${result[0].total_carboidratos}</li>
+                                    <li>Gorduras: ${result[0].total_gorduras}</li>
+                                </ul>
+                            `;
+                        }
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+    Consulta macros do dia:
+    <form id="consulta-macros-form">
+        <select name="nome_pessoa" required>
+            <option value="">Selecione uma pessoa</option>
+            <!-- Opções de pessoas serão carregadas aqui -->
+        </select>
+        <input type="date" name="data" required />
+        <button type="submit">Consultar</button>
+    </form>
+    <div id="consulta-macros-result"></div>
+</body>
+</html>

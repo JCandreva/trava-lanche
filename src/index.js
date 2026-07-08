@@ -2,6 +2,11 @@ export default {
   async fetch(request, env) {
     const { pathname } = new URL(request.url);
 
+    async function ensureForeignKeyParentKeys() {
+      await env.db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS idx_pessoas_nome ON pessoas(nome)").run();
+      await env.db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS idx_produtos_nome ON produtos(nome)").run();
+    }
+
     if (pathname === "/api/produtos") {
       if (request.method === "POST") {
         const data = await request.formData();
@@ -101,6 +106,31 @@ export default {
       }
     }
 
+    if (pathname === "/api/alimentacoes") {
+      if (request.method === "POST") {
+        const data = await request.formData();
+        const nome_pessoa = data.get("nome_pessoa");
+        const nome_produto = data.get("nome_produto");
+        const quantidade = data.get("quantidade");
+        const data_hora = data.get("data_hora");
+
+        try {
+          await env.db
+            .prepare("INSERT INTO alimentacao (nome_produto, nome_pessoa, quantidade, data_hora) VALUES (?, ?, ?, ?)")
+            .bind(nome_produto, nome_pessoa, parseInt(quantidade), data_hora)
+            .run();
+        } catch (error) {
+          return new Response("Erro ao adicionar alimentação: " + error.message, { status: 500 });
+        }
+
+        return new Response("Alimentação adicionada com sucesso!");
+      }
+
+      if (request.method === "GET") {
+        const { results } = await env.db.prepare("SELECT * FROM alimentacao").run();
+        return Response.json(results);
+      }
+    }
 
     return new Response(
       "Call /api/produtos to see all products",

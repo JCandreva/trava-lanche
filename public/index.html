@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Home</title>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const produtosTableBody = document.getElementById('produtos-table-body');
@@ -81,7 +81,7 @@
                         .then(product => {
                             if (product.length > 0) {
                                 product.forEach(p => {
-                                    const row = document.createElement('tr');
+                                    const row = document.createElement('div');
                                     row.innerHTML = `
                                         <p>Nome: ${p.nome}</p>
                                         <p>Calorias: ${p.calorias}</p>

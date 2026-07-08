@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alimentação</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const alimentacoesTableBody = document.getElementById('alimentacoes-table-body');
+            const addAlimentacaoForm = document.getElementById('add-alimentacao-form');
+
+            // Fetch alimentações from the API and populate the table
+            fetch('/api/alimentacoes')
+                .then(response => response.json())
+                .then(alimentacoes => {
+                    alimentacoes.forEach(alimentacao => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${alimentacao.nome_pessoa}</td>
+                            <td>${alimentacao.nome_produto}</td>
+                            <td>${alimentacao.quantidade}</td>
+                            <td>${new Date(alimentacao.data_hora).toLocaleString()}</td>
+                        `;
+                        alimentacoesTableBody.appendChild(row);
+                    });
+                });
+
+            // Fetch pessoas and produtos to populate the select options
+            fetch('/api/pessoas')
+                .then(response => response.json())
+                .then(pessoas => {
+                    const pessoaSelect = addAlimentacaoForm.querySelector('select[name="nome_pessoa"]');
+                    pessoas.forEach(pessoa => {
+                        const option = document.createElement('option');
+                        option.value = pessoa.nome;
+                        option.textContent = pessoa.nome;
+                        pessoaSelect.appendChild(option);
+                    });
+                });
+
+            fetch('/api/produtos')
+                .then(response => response.json())
+                .then(produtos => {
+                    const produtoSelect = addAlimentacaoForm.querySelector('select[name="nome_produto"]');
+                    produtos.forEach(produto => {
+                        const option = document.createElement('option');
+                        option.value = produto.nome;
+                        option.textContent = produto.nome;
+                        produtoSelect.appendChild(option);
+                    });
+                });
+
+            addAlimentacaoForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+
+                fetch('/api/alimentacoes', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                    location.reload();
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    Alimentações:
+    <table>
+        <thead>
+            <tr>
+                <th>Nome da Pessoa</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Data e Hora</th>
+            </tr>
+        </thead>
+        <tbody id="alimentacoes-table-body">
+            <!-- Alimentações serão carregadas aqui -->
+        </tbody>
+    </table>
+    Adicionar Alimentação:
+    <form id="add-alimentacao-form">
+        <select name="nome_pessoa" required>
+            <option value="">Selecione uma pessoa</option>
+            <!-- Opções de pessoas serão carregadas aqui -->
+        </select>
+        <select name="nome_produto" required>
+            <option value="">Selecione um produto</option>
+            <!-- Opções de produtos serão carregadas aqui -->
+        </select>
+        <input type="number" name="quantidade" placeholder="Quantidade" required />
+        <input type="datetime-local" name="data_hora" required />
+        <button type="submit">Adicionar Alimentação</button>
+    </form>
+</body>
+</html>

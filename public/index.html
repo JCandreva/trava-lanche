@@ -11,6 +11,8 @@
             const pessoasTableBody = document.getElementById('pessoas-table-body');
             const addProductForm = document.getElementById('add-product-form');
             const addPersonForm = document.getElementById('add-person-form');
+            const updateProductForm = document.getElementById('update-product-form');
+            const updatePersonForm = document.getElementById('update-person-form');
             const deleteProductForm = document.getElementById('delete-product-form');
             const deletePersonForm = document.getElementById('delete-person-form');
             const searchProductInput = document.getElementById('search-produto-input');
@@ -70,6 +72,40 @@
 
                 fetch('/api/pessoas', {
                     method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                    location.reload();
+                });
+            });
+
+            updateProductForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const nomeAtual = formData.get('nome_atual').trim();
+                formData.delete('nome_atual');
+
+                fetch(`/api/produtos/${encodeURIComponent(nomeAtual)}`, {
+                    method: 'PUT',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                    location.reload();
+                });
+            });
+
+            updatePersonForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const nomeAtual = formData.get('nome_atual').trim();
+                formData.delete('nome_atual');
+
+                fetch(`/api/pessoas/${encodeURIComponent(nomeAtual)}`, {
+                    method: 'PUT',
                     body: formData
                 })
                 .then(response => response.text())
@@ -172,6 +208,16 @@
                 <input type="text" name="nome" placeholder="Nome do Produto" required />
                 <button type="submit">Excluir Produto</button>
             </form>
+            <h3>Atualizar produto</h3>
+            <form id="update-product-form">
+                <input type="text" name="nome_atual" placeholder="Nome atual do Produto" required />
+                <input type="text" name="nome" placeholder="Novo Nome do Produto" required />
+                <input type="number" step="any" name="calorias" placeholder="Calorias" required />
+                <input type="number" step="any" name="proteinas" placeholder="Proteínas" required />
+                <input type="number" step="any" name="gorduras" placeholder="Gorduras" required />
+                <input type="number" step="any" name="carboidratos" placeholder="Carboidratos" required />
+                <button type="submit">Atualizar Produto</button>
+            </form>
         </div>
 
         <div>
@@ -201,6 +247,15 @@
             <form id="delete-person-form">
                 <input type="text" name="nome" placeholder="Nome da Pessoa" required />
                 <button type="submit">Excluir Pessoa</button>
+            </form>
+            <h3>Atualizar pessoa</h3>
+            <form id="update-person-form">
+                <input type="text" name="nome_atual" placeholder="Nome atual da Pessoa" required />
+                <input type="text" name="nome" placeholder="Novo Nome da Pessoa" required />
+                <input type="number" step="any" name="peso" placeholder="Peso(kg)" required />
+                <input type="number" name="idade" placeholder="Idade" required />
+                <input type="number" name="altura" placeholder="Altura(cm)" required />
+                <button type="submit">Atualizar Pessoa</button>
             </form>
         </div>
 

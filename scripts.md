@@ -14,8 +14,8 @@ CREATE TABLE produtos (
 );
 CREATE TABLE alimentacao(
   id_alimentacao INTEGER primary key autoincrement,
-  nome_produto INTEGER references produtos(nome) on delete cascade,
-  nome_pessoa INTEGER references pessoas(nome) on delete cascade,
+  nome_produto INTEGER references produtos(nome) on delete cascade on update cascade,
+  nome_pessoa INTEGER references pessoas(nome) on delete cascade on update cascade,
   data_hora datetime,
   quantidade float
 );

@@ -37,6 +37,48 @@ export default {
     if (pathname.startsWith("/api/produtos/")) {
       const nome = decodeURIComponent(pathname.split("/").pop());
 
+      if (request.method === "PUT") {
+        const data = await request.formData();
+        const novoNome = data.get("nome");
+        const calorias = data.get("calorias");
+        const proteinas = data.get("proteinas");
+        const gorduras = data.get("gorduras");
+        const carboidratos = data.get("carboidratos");
+
+        if (!novoNome || !calorias || !proteinas || !gorduras || !carboidratos) {
+          return new Response("Dados inválidos para atualização do produto.", { status: 400 });
+        }
+
+        try {
+          const result = await env.db
+            .prepare("UPDATE produtos SET nome = ?, calorias = ?, proteinas = ?, gorduras = ?, carboidratos = ? WHERE nome = ?")
+            .bind(
+              novoNome,
+              parseFloat(calorias),
+              parseFloat(proteinas),
+              parseFloat(gorduras),
+              parseFloat(carboidratos),
+              nome
+            )
+            .run();
+
+          if (!result.meta?.changes) {
+            return new Response("Produto não encontrado.", { status: 404 });
+          }
+
+          if (novoNome !== nome) {
+            await env.db
+              .prepare("UPDATE alimentacao SET nome_produto = ? WHERE nome_produto = ?")
+              .bind(novoNome, nome)
+              .run();
+          }
+        } catch (error) {
+          return new Response("Erro ao atualizar produto: " + error.message, { status: 500 });
+        }
+
+        return new Response("Produto atualizado com sucesso!");
+      }
+
       if (request.method === "DELETE") {
         await env.db
           .prepare("DELETE FROM produtos WHERE nome = ?")
@@ -82,6 +124,40 @@ export default {
 
     if (pathname.startsWith("/api/pessoas/")) {
       const nome = decodeURIComponent(pathname.split("/").pop());
+
+      if (request.method === "PUT") {
+        const data = await request.formData();
+        const novoNome = data.get("nome");
+        const peso = data.get("peso");
+        const idade = data.get("idade");
+        const altura = data.get("altura");
+
+        if (!novoNome || !peso || !idade || !altura) {
+          return new Response("Dados inválidos para atualização da pessoa.", { status: 400 });
+        }
+
+        try {
+          const result = await env.db
+            .prepare("UPDATE pessoas SET nome = ?, peso = ?, idade = ?, altura = ? WHERE nome = ?")
+            .bind(novoNome, parseFloat(peso), parseInt(idade), parseInt(altura), nome)
+            .run();
+
+          if (!result.meta?.changes) {
+            return new Response("Pessoa não encontrada.", { status: 404 });
+          }
+
+          if (novoNome !== nome) {
+            await env.db
+              .prepare("UPDATE alimentacao SET nome_pessoa = ? WHERE nome_pessoa = ?")
+              .bind(novoNome, nome)
+              .run();
+          }
+        } catch (error) {
+          return new Response("Erro ao atualizar pessoa: " + error.message, { status: 500 });
+        }
+
+        return new Response("Pessoa atualizada com sucesso!");
+      }
 
       if (request.method === "DELETE") {
         await env.db
